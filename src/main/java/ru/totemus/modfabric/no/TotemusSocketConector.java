@@ -9,7 +9,10 @@ import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import static ru.totemus.modfabric.no.ResourcePack.TotemsTimeCacheVar;
+
 public class TotemusSocketConector {
+    final Object SyncObject = "";
     WebSocketClient webSocketClient;
     public SocketConnect onConnected;
     public ResourcePack resourcePack = null;
@@ -19,11 +22,13 @@ public class TotemusSocketConector {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(1500);
-                    while (webSocketClient == null || !webSocketClient.isOpen() || webSocketClient.isClosed())
-                        Thread.sleep(500);
+                    synchronized (SyncObject) {
+                        Thread.sleep(1500);
+                        while (webSocketClient == null || !webSocketClient.isOpen() || webSocketClient.isClosed())
+                            Thread.sleep(500);
 
-                    r.run();
+                        r.run();
+                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -105,9 +110,7 @@ public class TotemusSocketConector {
             }
         };
 
-        synchronized (webSocketClient) {
-            webSocketClient.connect();
-        }
+        webSocketClient.connect();
     }
 
     public void checkAndReconnect(){
@@ -138,12 +141,14 @@ public class TotemusSocketConector {
     }
 
     public void sendGetTotem(String nick){
+        if(!ResourcePack.TotemsTimeCacheVar.getTotem(nick.toLowerCase().trim())) return;
+
         nick = nick.toLowerCase();
 
         var obj = new JSONObject();
 
         obj.put("type", "get_totem");
-        obj.put("task_id", 0);
+        obj.put("task_id", 8);
         obj.put("mode", "nick");
         obj.put("nick", nick);
 

@@ -35,8 +35,8 @@ public class TotemusMod implements ModInitializer {
     ResourcePack ResPack;
     TotemusSettings settings = new TotemusSettings(new File("totemusSettings.json"));
     TotemusSocketConector connector;
-    //private static final String TotemusServer = "ws://apiconnectormaster.vanillaland.ru:25080/";
-    private static final String TotemusServer = "ws://localhost:8080/";
+    private static final String TotemusServer = "ws://apiconnectormaster.vanillaland.ru:25080/";
+    //private static final String TotemusServer = "ws://localhost:8080/";
     private static boolean isModInitedSuccess = false;
     private static boolean isModOffed = true;
     @Override

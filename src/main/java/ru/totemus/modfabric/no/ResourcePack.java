@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.HashMap;
 
 import static ru.totemus.modfabric.no.MyUtils.md5OfFile;
 
@@ -12,7 +11,7 @@ public class ResourcePack {
     File citDir;
     File dirToResPack;
     static private final String s = File.separator;
-    private final TotemsTimeCache TotemsTimeCacheVar = new TotemsTimeCache();
+    public static final TotemsTimeCache TotemsTimeCacheVar = new TotemsTimeCache();
     public ResourcePack(File d){
         this.dirToResPack = d;
         citDir = new File(dirToResPack.getAbsolutePath() + s + "assets" + s + "minecraft" + s + "optifine" + s + "cit" + s + "totems");
@@ -73,7 +72,6 @@ public class ResourcePack {
     public String checkIsTotemExist(String nick){
         try {
             nick = nick.toLowerCase();
-            if(TotemsTimeCacheVar.getTotem(nick) != null) return null;
             var f = new File(citDir.getAbsolutePath()+s+nick+".png");
             var attr = Files.readAttributes(f.toPath(), BasicFileAttributes.class);
 
@@ -87,7 +85,6 @@ public class ResourcePack {
     public void getTotemWithConnector(String nick, TotemusSocketConector connector){
         nick = nick.toLowerCase();
         if(checkIsTotemExist(nick) != null) return;
-        TotemsTimeCacheVar.cacheTotem(nick);
         connector.sendGetTotem(nick);
     }
 
